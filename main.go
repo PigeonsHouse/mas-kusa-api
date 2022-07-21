@@ -11,9 +11,12 @@ import (
 )
 
 func main() {
-	api := gin.Default()
 	utils.LoadEnv()
+
 	db.InitDB()
+
+	api := gin.Default()
 	routers.InitRouter(api)
+
 	api.Run(fmt.Sprintf(":%s", utils.ApiPort))
 }
