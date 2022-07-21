@@ -102,10 +102,12 @@ paths:
               schema:
                 type: object
                 items:
-                  $ref: '#/components/schemas/Message'
+                  $ref: '#/components/schemas/MasKusaInfo'
               examples:
-                Example:
-                  $ref: '#/components/examples/MessageOK'
+                TrueInfo:
+                  $ref: '#/components/examples/MasKusaInfoTrue'
+                FalseInfo:
+                  $ref: '#/components/examples/MasKusaInfoFalse'
 
 components:
   schemas:
@@ -135,6 +137,13 @@ components:
           type: string
         token:
           type: string
+    MasKusaInfo:
+      type: object
+      properties:
+        path:
+          type: string
+        refresh:
+          type: bool
   examples:
     MessageOK:
       value:
@@ -147,11 +156,19 @@ components:
         id: "620deecc-49fb-483e-b8e7-3de0646bd2b8"
         created_at: "2002-02-17T12:34:56.987654321+09:00"
         instance: https://mastodon.example.com
-        name: "@MyAccountName"
+        name: "MyAccountName"
         token: "XeD9THZUrSxhQZDandOH3J85DjuAkNQtqAr0bna08sP"
     JwtInfo:
       value:
         jwt: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.t42p4AHef69Tyyi88U6+p0utZYYrg7mmCGhoAd7Zffs
+    MasKusaInfoTrue:
+      value:
+        path: http://localhost:8000/static/mastodon.example.com/MyAccountName-20020217.png
+        refresh: true
+    MasKusaInfoFalse:
+      value:
+        path: http://localhost:8000/static/mastodon.example.com/MyAccountName-20020217.png
+        refresh: false
   securitySchemes:
     Bearer:
       type: http
