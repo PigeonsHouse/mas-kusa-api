@@ -49,6 +49,14 @@ func UserInfoFromUserId(userId string) (userInfo db.User, err error) {
 	return
 }
 
+func DeleteInfo(userId string) (err error) {
+	if _, err = UserInfoFromUserId(userId); err != nil {
+		return
+	}
+	err = db.Psql.Where("id = ?", userId).Delete(&db.User{}).Error
+	return
+}
+
 func generateToken(userID string) (string, error) {
 	now := time.Now()
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{

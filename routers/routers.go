@@ -92,18 +92,46 @@ func generateJWT(c *gin.Context) {
 }
 
 func deleteMastodonInfo(c *gin.Context) {
+	var (
+		userId  any
+		isExist bool
+		err     error
+	)
+
+	if userId, isExist = c.Get("user_id"); !isExist {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message": "token is invalid",
+		})
+		return
+	}
+
+	if err = cruds.DeleteInfo(userId.(string)); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message": err.Error(),
+		})
+		return
+	}
+
 	c.JSON(http.StatusOK, gin.H{
-		"message": "temp",
+		"message": "OK",
 	})
 }
 
 func generateTempMaskusa(c *gin.Context) {
 	var (
-		u   db.User
-		err error
+		u       db.User
+		userId  any
+		isExist bool
+		err     error
 	)
 
-	userId, _ := c.Get("user_id")
+	if userId, isExist = c.Get("user_id"); !isExist {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message": "token is invalid",
+		})
+		return
+	}
+
 	if u, err = cruds.UserInfoFromUserId(userId.(string)); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"message": err.Error(),
