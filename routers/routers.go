@@ -11,10 +11,13 @@ import (
 )
 
 func defineRouter(r *gin.RouterGroup) {
-	r.GET("", hello)
+	r.GET("/health", hello)
+
 	r.POST("/users/signup", setMastodonInfo)
 	r.POST("/users/signin", generateJWT)
-	r.POST("/generate", generateTempMaskusa)
+	r.DELETE("/users", middleware, deleteMastodonInfo)
+
+	r.GET("/generate", middleware, generateTempMaskusa)
 }
 
 func hello(c *gin.Context) {
@@ -61,6 +64,12 @@ func setMastodonInfo(c *gin.Context) {
 }
 
 func generateJWT(c *gin.Context) {
+	c.JSON(http.StatusOK, gin.H{
+		"message": "temp",
+	})
+}
+
+func deleteMastodonInfo(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{
 		"message": "temp",
 	})

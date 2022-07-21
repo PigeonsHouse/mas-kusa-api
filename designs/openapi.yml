@@ -9,7 +9,7 @@ servers:
     description: develop
 
 paths:
-  /api/v1:
+  /api/v1/health:
     get:
       summary: check health
       responses:
