@@ -14,6 +14,7 @@ var (
 	DbPass     string
 	DbName     string
 	DbPort     string
+	ServerUrl  string
 	SigningKey []byte
 )
 
@@ -26,6 +27,8 @@ func LoadEnv() {
 	DbPass = getEnv("POSTGRES_PASSWORD", "password")
 	DbName = getEnv("POSTGRES_DB", "postgres")
 	DbPort = getEnv("POSTGRES_PORT", "5432")
+
+	ServerUrl = getEnv("API_HOST", "http://localhost")
 
 	secretKey := getEnv("SECRET_KEY", "secret")
 	SigningKey = []byte(secretKey)

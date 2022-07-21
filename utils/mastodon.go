@@ -2,7 +2,6 @@ package utils
 
 import (
 	"context"
-	"fmt"
 	"sync"
 	"time"
 
@@ -30,11 +29,14 @@ func GetUserName(instance string, token string) (acct string, err error) {
 	return
 }
 
-func CountToot(instance string, token string, thisMonth bool) (baseDate time.Time, tootNumList []int) {
-	var wg sync.WaitGroup
+func CountToot(instance string, token string, thisMonth bool) (baseDate time.Time, tootNumList []int, err error) {
+	var (
+		wg        sync.WaitGroup
+		myAccount *mastodon.Account
+		maxId     mastodon.ID
+	)
 	// mastodonの5分間のリクエスト上限
 	const maxRequest = 300
-
 	// 今が何月かの情報などを取得するため
 	now := time.Now()
 
@@ -45,28 +47,25 @@ func CountToot(instance string, token string, thisMonth bool) (baseDate time.Tim
 	})
 
 	// アカウントID取得に必要
-	myAccount, _ := client.GetAccountCurrentUser(context.Background())
-	// 連続してトゥートリストを取得するため，末のトゥートのIDを保持する変数
-	var MaxID mastodon.ID
+	myAccount, err = client.GetAccountCurrentUser(context.Background())
+	if err != nil {
+		return
+	}
 
 	baseDate = time.Date(now.Year(), now.Month(), 1, 0, 0, 0, 0, now.Location())
 	if !thisMonth {
 		baseDate = baseDate.AddDate(0, -1, 0)
 	}
 	nextDate := baseDate.AddDate(0, 1, 0)
-	fmt.Println(baseDate)
-	fmt.Println(nextDate)
 	// 調査する月の日数の保持
 	MaxDay := nextDate.AddDate(0, 0, -1).Day()
 
 	tootNumList = make([]int, MaxDay)
-
 	// baseDate以降のトゥートをかき集める
 	for i := 0; i < maxRequest-2; i++ {
-		if toots, err := client.GetAccountStatuses(context.Background(), myAccount.ID, &mastodon.Pagination{MaxID: MaxID, Limit: 40}); err == nil {
+		if toots, err := client.GetAccountStatuses(context.Background(), myAccount.ID, &mastodon.Pagination{MaxID: maxId, Limit: 40}); err == nil {
 			last := toots[len(toots)-1]
-			fmt.Println(last.Content)
-			MaxID = last.ID
+			maxId = last.ID
 			if last.CreatedAt.After(nextDate) {
 				continue
 			}
@@ -82,8 +81,6 @@ func CountToot(instance string, token string, thisMonth bool) (baseDate time.Tim
 	}
 	wg.Wait()
 
-	fmt.Println(tootNumList)
-
 	return
 }
 
@@ -91,7 +88,6 @@ func routineCountUpToot(baseDate time.Time, nextDate time.Time, toots []*mastodo
 	jst := time.FixedZone("Asia/Tokyo", 9*60*60)
 	for _, toot := range toots {
 		if toot.CreatedAt.After(baseDate) && toot.CreatedAt.Before(nextDate) {
-			fmt.Println(toot.CreatedAt)
 			(*counter)[toot.CreatedAt.In(jst).Day()-1] += 1
 		}
 	}

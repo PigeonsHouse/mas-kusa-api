@@ -18,5 +18,7 @@ func main() {
 	api := gin.Default()
 	routers.InitRouter(api)
 
+	api.Static("/static", "static")
+
 	api.Run(fmt.Sprintf(":%s", utils.ApiPort))
 }

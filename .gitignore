@@ -1,3 +1,5 @@
 .env
 tmp/
 vscode/
+static/*
+!static/.gitkeep
