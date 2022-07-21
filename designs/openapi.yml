@@ -1,0 +1,154 @@
+openapi: 3.0.0
+
+info:
+  title: OnakaAPI
+  version: dev
+
+servers:
+  - url: http://localhost:8000
+    description: develop
+
+paths:
+  /api/v1:
+    get:
+      summary: check health
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                items:
+                  $ref: '#/components/schemas/Message'
+              examples:
+                Example:
+                  $ref: '#/components/examples/MessageHello'
+  /api/v1/users/signup:
+    post:
+      summary: register mastodon info
+      tags:
+        - users
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SignUser'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                items:
+                  $ref: '#/components/schemas/UserInfo'
+              examples:
+                Example:
+                  $ref: '#/components/examples/UserInfo'
+  /api/v1/users/signin:
+    post:
+      summary: generate jwt
+      tags:
+        - users
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SignUser'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                items:
+                  $ref: '#/components/schemas/JwtInfo'
+              examples:
+                Example:
+                  $ref: '#/components/examples/JwtInfo'
+  /api/v1/users:
+    delete:
+      summary: delete user info
+      tags:
+        - users
+      security:
+        - Bearer: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                items:
+                  $ref: '#/components/schemas/Message'
+              examples:
+                Example:
+                  $ref: '#/components/examples/MessageOK'
+  /api/v1/generate:
+    get:
+      summary: generate temp mas-kusa image
+      tags:
+        - images
+      security:
+        - Bearer: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                items:
+                  $ref: '#/components/schemas/Message'
+              examples:
+                Example:
+                  $ref: '#/components/examples/MessageOK'
+
+components:
+  schemas:
+    Message:
+      type: object
+      properties:
+        message:
+          type: string
+    JwtInfo:
+      type: object
+      properties:
+        jwt:
+          type: string
+    SignUser:
+      type: object
+      properties:
+        instance:
+          type: string
+        token:
+          type: string
+    UserInfo:
+      type: object
+      properties:
+        instance:
+          type: string
+        name:
+          type: string
+        token:
+          type: string
+  examples:
+    MessageOK:
+      value:
+        message: OK
+    MessageHello:
+      value:
+        message: hello!
+    UserInfo:
+      value:
+        id: "620deecc-49fb-483e-b8e7-3de0646bd2b8"
+        created_at: "2002-02-17T12:34:56.987654321+09:00"
+        instance: https://mastodon.example.com
+        name: "@MyAccountName"
+        token: "XeD9THZUrSxhQZDandOH3J85DjuAkNQtqAr0bna08sP"
+    JwtInfo:
+      value:
+        jwt: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.t42p4AHef69Tyyi88U6+p0utZYYrg7mmCGhoAd7Zffs
