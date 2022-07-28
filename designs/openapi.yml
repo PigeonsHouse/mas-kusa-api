@@ -7,6 +7,8 @@ info:
 servers:
   - url: http://localhost:8000
     description: develop
+  - url: https://mas-kusa-api.herokuapp.com
+    description: product
 
 paths:
   /api/v1/health:
@@ -163,11 +165,11 @@ components:
         jwt: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.t42p4AHef69Tyyi88U6+p0utZYYrg7mmCGhoAd7Zffs
     MasKusaInfoTrue:
       value:
-        path: http://localhost:8000/static/mastodon.example.com/MyAccountName-20020217.png
+        path: /static/mastodon.example.com/MyAccountName-20020217.png
         refresh: true
     MasKusaInfoFalse:
       value:
-        path: http://localhost:8000/static/mastodon.example.com/MyAccountName-20020217.png
+        path: /static/mastodon.example.com/MyAccountName-20020217.png
         refresh: false
   securitySchemes:
     Bearer:

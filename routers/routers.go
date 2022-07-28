@@ -142,7 +142,7 @@ func generateTempMaskusa(c *gin.Context) {
 	now := time.Now()
 	baseInstance := strings.Replace(strings.Replace(strings.Replace(u.Instance, "https://", "", -1), "http://", "", -1), "/", "", -1)
 	savingPath := "static/" + baseInstance + "/" + u.Name + "-" + now.Format("20060102") + ".png"
-	urlImagePath := utils.ServerUrl + ":" + utils.ApiPort + "/" + savingPath
+	urlImagePath := "/" + savingPath
 	if _, err := os.Stat("static/" + baseInstance); err != nil {
 		os.Mkdir("static/"+baseInstance, 0777)
 	}
