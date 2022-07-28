@@ -1,1 +1,1 @@
-clock bin/mas-kusa-api
+web bin/mas-kusa-api
